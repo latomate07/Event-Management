@@ -1,0 +1,21 @@
+***Base du projet***
+
+Projet à réaliser avec laravel 8, inertia et vue.js 3 et momentjs
+
+[installation](https://jetstream.laravel.com/2.x/installation.html)
+
+***Tache demandée***
+
+**crud d'un système de gestion d'événements (visuel libre, calendrier ou liste classique)**
+
+- une modal pour l'ajout et la modification d'événement avec un titre et un timestamp
+- une liste des événements à venir avec possibilité d'en retirer
+
+**création d'un component dateRangePicker** (Doit agir sur la liste ou le calendrier)
+
+- ce component devra se composer comme un input (et retourner un array avec le debut et la fin)
+- le visuel attendu comprendra un calendrier à affichage mensuel
+
+le component devra servir à filtrer les événements à venir sur l'intervalle choisie
+
+coté backend, un scope est attendu pour filtrer avec l'intervalle donnée
