@@ -11,6 +11,10 @@ class EventController extends Controller
             "content" => "Aller au marché pour manger des PIZZA haha",
             "created_at" => date("d/m/Y")
         ]);
+
+        return Inertia::render('', [
+            'users' => $users
+        ]);
     }
 
     /****
