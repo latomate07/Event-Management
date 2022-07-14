@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +21,16 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        // 'users' => User::all(), // Récupérer tout les utilisateurs
+        'users' => ["barry", "mohamed"]
     ]);
 });
+
+Route::get('/events', [EventController::class, "index"]);
+Route::post('/event/add', [ArticleController::class, 'addEvent']);
+Route::patch('/event/edit/{id}', [ArticleController::class, 'updateEvent']);
+Route::delete('/event/delete/{id}', [ArticleController::class, 'deleteEvent']);
+
 
 Route::middleware([
     'auth:sanctum',
@@ -33,3 +41,4 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+

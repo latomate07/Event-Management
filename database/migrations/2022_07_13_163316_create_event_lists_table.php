@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
-            $table->increments('id')->unique(); // Id de l'évenement
-            $table->string('title', 255);
-            $table->text('content'); // COntenu de l'évenement
+        Schema::create('event_lists', function (Blueprint $table) {
+            $table->id();
+            $table->string('event_name'); // Nom de l'évenement
+            $table->date('event_start'); // Début de l'évenement
+            $table->date('event_end'); // Fin de l'évenement
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('event_lists');
     }
 };
