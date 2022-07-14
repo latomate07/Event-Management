@@ -30,7 +30,7 @@ defineProps({
         </div>
 
         <div class="pace-y-4" v-if="$page.props.user">
-            <p class="text-lg font-semibold text-slate-900">Bonjour Barry</p>
+            <p class="text-lg font-semibold text-slate-900">Bonjour {{ $page.props.user.name }}</p>
             <p class="mb-2">Ajouter et/ou Modifier vos évenements sans tracas !</p>
 
             <div class="w-96 bg-white shadow rounded py-10">
@@ -58,18 +58,6 @@ defineProps({
         </div>
     </div>
 </template>
-
-<script>
-
-export default {
-    props: ['users'],
-
-    mounted() {
-        console.log(this.users)
-    }
-}
-
-</script>
 
 <style scoped>
     .bg-gray-100 {

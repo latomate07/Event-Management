@@ -7,14 +7,8 @@ use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {   
-        public function index()
-    {
-        // $eventList = EventList::all();
-
-        $eventList = [
-            "name" => "ismael",
-            "pseudo" => "elbaristo"
-        ];
+        public function index() {
+        $eventList = EventList::with('user')->get();
 
         return Inertia::render('Events', [
             "allEvents" => $eventList,
@@ -29,6 +23,7 @@ class EventController extends Controller
     public function addEvent(Request $request) { // Ajouter un évenement
         $validator = Validator::make($request->all(), [
             'event_name' => ['required'],
+            'event_container' => ['required'],
             'event_start' => ['required'],
             'event_end' => ['required']
         ])->validate();
@@ -36,7 +31,7 @@ class EventController extends Controller
         EventList::create($request->all());
   
         return redirect()->back()
-                    ->with('message', 'Article Created Successfully.');
+                    ->with('message', 'Événement crée avec succès !.');
     }
 
     /****
@@ -51,7 +46,7 @@ class EventController extends Controller
         if ($request->has('id')) {
             EventList::find($request->input('id'))->update($request->all());
             return redirect()->back()
-                    ->with('message', 'Post Updated Successfully.');
+                    ->with('message', 'Mis à jour effectuée avec succès.');
         }
     }
 

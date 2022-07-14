@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('event_lists', function (Blueprint $table) {
             $table->id();
             $table->string('event_name'); // Nom de l'évenement
+            $table->string('event_content'); // Contenu de l'évenement
             $table->date('event_start'); // Début de l'évenement
             $table->date('event_end'); // Fin de l'évenement
             $table->timestamps();
