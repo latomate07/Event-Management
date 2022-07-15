@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue'
 import { Head, Link } from "@inertiajs/inertia-vue3";
 import NavLink from "@/Jetstream/NavLink.vue";
 import Input from "@/Jetstream/Input.vue";
@@ -7,6 +6,9 @@ import List from "@/CustomComponents/List.vue";
 import ListItem from "@/CustomComponents/ListItem.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 import Modal from "@/CustomComponents/Modal.vue";
+import UpdateModal from "@/CustomComponents/UpdateModal.vue";
+import DeleteModal from "@/CustomComponents/DeleteModal.vue";
+
 
 </script>
 
@@ -16,7 +18,7 @@ import Modal from "@/CustomComponents/Modal.vue";
         <header class="bg-white shadow space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
             <div class="flex items-center justify-between">
                 <h2 class="font-semibold text-slate-900">Mes évenements</h2>
-                <button @click="openModal()"  class="hover:bg-blue-400 group flex items-center rounded-md bg-blue-500 text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm">
+                <button @click="toggleModale()" class="hover:bg-blue-400 group flex items-center rounded-md bg-blue-500 text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm">
                     <svg width="20" height="20" fill="currentColor" class="mr-2" aria-hidden="true">
                         <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
                     </svg>
@@ -69,9 +71,10 @@ import Modal from "@/CustomComponents/Modal.vue";
         <p>Vous devez vous connectez !</p>
     </div>
 
-    <modal>
-        <template>haha</template>
-    </modal>
+    <modal v-bind:revele="revele" v-bind:toggleModale="toggleModale"></modal>
+
+
+
 </template>
 
 <script>
@@ -80,21 +83,24 @@ export default {
     components: {
         AppLayout,
         List,
+        NavLink,
         'modal': Modal,
-        NavLink
+        'updateModal': UpdateModal,
+        'deleteModal': DeleteModal
     },
 
     props: ["allEvents", "errors"],
     data() {
         return {
             events: this.allEvents,
-            editMode: false,
-            isOpen: false,
+            revele: false, // Affichage de la modale => Création 
+            editMode: false, // Affichage de la modale => Modification
+            deleteMode: false, // Affichage de la modale => Suppression 
             form: {
                 title: null,
                 content: null,
-                created_at: null,
-                updated_at: null,
+                start: null,
+                end: null,
             },
         };
     },
@@ -104,44 +110,15 @@ export default {
     },
 
     methods: {
-        openModal() {
-            this.isOpen = true;
+        toggleModale() {
+            this.revele = !this.revele
         },
-        closeModal() {
-            this.isOpen = false;
-            this.reset();
-            this.editMode = false;
+        toggleEdit() {
+            this.editMode = !this.editMode
         },
-        reset() {
-            this.form = {
-                title: null,
-                body: null,
-            };
-        },
-        save(data) { // Sauvegarder un évenement
-            this.$inertia.post("/article", data);
-            this.reset();
-            this.closeModal();
-            this.editMode = false;
-        },
-        edit(data) {
-            this.form = Object.assign({}, data);
-            this.editMode = true;
-            this.openModal();
-        },
-        update(data) {
-            data._method = "PATCH";
-            this.$inertia.post("/article/edit/" + data.id, data);
-            this.reset();
-            this.closeModal();
-        },
-        deleteEvent(data) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cet évenement ?")) return;
-            data._method = "DELETE";
-            this.$inertia.post("/article/delete/" + data.id, data);
-            this.reset();
-            this.closeModal();
-        },
-    },
+        toggleDeleteModal() {
+            this.deleteMode = !this.deleteMode
+        }
+    }
 };
 </script>
