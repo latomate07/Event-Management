@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('event_content'); // Contenu de l'évenement
             $table->date('event_start'); // Début de l'évenement
             $table->date('event_end'); // Fin de l'évenement
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

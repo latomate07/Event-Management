@@ -27,9 +27,9 @@ Route::get('/', function () {
 });
 
 Route::get('/events', [EventController::class, "index"]);
-Route::post('/event/add', [ArticleController::class, 'addEvent']);
-Route::patch('/event/edit/{id}', [ArticleController::class, 'updateEvent']);
-Route::delete('/event/delete/{id}', [ArticleController::class, 'deleteEvent']);
+Route::post('/event/add', [EventController::class, 'addEvent']);
+Route::patch('/event/edit/{id}', [EventController::class, 'updateEvent']);
+Route::delete('/event/delete/{id}', [EventController::class, 'deleteEvent']);
 
 
 Route::middleware([
