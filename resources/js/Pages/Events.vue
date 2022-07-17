@@ -44,63 +44,103 @@ import 'moment/dist/locale/fr'
                 </ul>
             </nav>
 
-            <div v-if="showTodayEvents">
-                <List v-if="showTodayEvents">
-                    <!-- Liste des évenements -->
-                    <ListItem v-for="event in actualEvents" v-bind:key="event.id" class="bg-white shadow my-5">
-                        <template v-slot:title> <!-- Titre -->
+            <div v-if="showTodayEvents" v-for="event in actualEvents" v-bind:key="event.id" >
+                <List>
+                     <!-- Liste des évenements  -->
+                    <ListItem class="bg-white shadow my-5">
+                        <template v-slot:title>
                             {{ event.event_name }}
                         </template>
-                        <template v-slot:event_content> <!-- Contenu de l'évenement -->
+                        <template v-slot:event_content>
                             {{ event.event_content }}
                         </template>
-                        <template v-slot:updated_at> <!-- Date de modification -->
+                        <template v-slot:updated_at>  
                             {{ dateTime(event.updated_at) }}
                         </template>
-                        <template v-slot:start_events> <!-- Commencement de l'évenement -->
+                        <template v-slot:start_events>  
                             {{ dateTime(event.event_start) }}
                         </template>
-                        <template v-slot:end_events> <!-- Fin de l'évenement -->
+                        <template v-slot:end_events>  
                             {{ dateTime(event.event_end) }}
                         </template>
                         <template v-slot:toggleDeleteModal>
-                            <button @click="toggleDeleteModal()" class="mt-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Terminer</button>
+                            <button @click="deleteRow(event)" class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
                         </template>
                         <template v-slot:toggleEdit>
                             <button @click="toggleEdit(event)" class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
                         </template>
                     </ListItem>
                 </List>
+
+                 <!-- Modal = Modification d'évenement  -->
+                <div v-if="editMode" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
+                    <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="update(form)">
+                        <button @click="toggleEdit()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                            <span class="sr-only">Fermeture du modal</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <input v-model="event.event_name"  class="my-2" type="text" name="" id="">
+                        <textarea  v-model="event.event_content" class="my-2 resize-none" type="text" name="" id="" placeholder="Contenu de l'évènement"><slot name="event_content"></slot></textarea>
+                        <label for="start">Début</label>
+                        <input  v-model="event.event_start" class="my-2" type="date" name="" id="start" placeholder="Début de l'évènement">
+                        <label for="end">Fin</label>
+                        <input  v-model="event.event_end" class="my-2" type="date" name="" id="end" placeholder="Fin de l'évènement">
+
+                        <input class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded" type="submit" value="Modifier">
+                    </form>
+                </div>
             </div>
 
-            <div v-if="showAvenirEvents">
+            <div v-if="showAvenirEvents" v-for="event in eventsAvenir" v-bind:key="event.id">
                 <List>
-                    <!-- Liste des évenements -->
-                    <ListItem v-for="event in eventsAvenir" v-bind:key="event.id" class="bg-white shadow my-5">
-                        <template v-slot:title> <!-- Titre -->
+                     <!-- Liste des évenements  -->
+                    <ListItem class="bg-white shadow my-5">
+                        <template v-slot:title>
                             {{ event.event_name }}
                         </template>
-                        <template v-slot:event_content> <!-- Contenu de l'évenement -->
+                        <template v-slot:event_content>
                             {{ event.event_content }}
                         </template>
-                        <template v-slot:updated_at> <!-- Date de modification -->
+                        <template v-slot:updated_at>  
                             {{ dateTime(event.updated_at) }}
                         </template>
-                        <template v-slot:start_events> <!-- Commencement de l'évenement -->
+                        <template v-slot:start_events>  
                             {{ dateTime(event.event_start) }}
                         </template>
-                        <template v-slot:end_events> <!-- Fin de l'évenement -->
+                        <template v-slot:end_events>  
                             {{ dateTime(event.event_end) }}
                         </template>
                         <template v-slot:toggleDeleteModal>
-                            <button @click="toggleDeleteModal()" class="mt-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Terminer</button>
+                            <button @click="deleteRow(event)" class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
                         </template>
                         <template v-slot:toggleEdit>
                             <button @click="toggleEdit(event)" class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
                         </template>
                     </ListItem>
                 </List>
-            </div>
+
+                <!-- Modal = Modification d'évenement  -->
+                <div v-if="editMode" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
+                    <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="update(form)">
+                        <button @click="toggleEdit()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                            <span class="sr-only">Fermeture du modal</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <input v-model="event.event_name"  class="my-2" type="text" name="" id="">
+                        <textarea  v-model="event.event_content" class="my-2 resize-none" type="text" name="" id="" placeholder="Contenu de l'évènement"><slot name="event_content"></slot></textarea>
+                        <label for="start">Début</label>
+                        <input  v-model="event.event_start" class="my-2" type="date" name="" id="start" placeholder="Début de l'évènement">
+                        <label for="end">Fin</label>
+                        <input  v-model="event.event_end" class="my-2" type="date" name="" id="end" placeholder="Fin de l'évènement">
+
+                        <input class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded" type="submit" value="Modifier">
+                    </form>
+                </div>
+            </div> <!-- End ShowAVenirEvents -->
         </div>
     </div>
 
@@ -108,12 +148,11 @@ import 'moment/dist/locale/fr'
         <p>Vous devez vous connectez !</p>
     </div>
 
-<!-- Modal = Ajout d'évenement  -->
+ <!-- Modal = Ajout d'évenement   -->
     <div v-if="revele" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-        <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="add()">
+        <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="add(form)">
             <button @click="toggleModale()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <span class="sr-only">Fermeture du modal</span>
-                <!-- Heroicon name: outline/x -->
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -137,48 +176,7 @@ import 'moment/dist/locale/fr'
         </form>
     </div>
 
-<!-- Modal = Modification d'évenement -->
-    <div v-if="editMode" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-        <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="edit()">
-            <button @click="toggleEdit()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-                <span class="sr-only">Fermeture du modal</span>
-                <!-- Heroicon name: outline/x -->
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <input v-model="this.events.event_name"  class="my-2" type="text" name="" id="">
-            <textarea  v-model="this.events.event_content" class="my-2 resize-none" type="text" name="" id="" placeholder="Contenu de l'évènement"><slot name="event_content"></slot></textarea>
-            <label for="start">Début</label>
-            <input  v-model="this.events.event_start" class="my-2" type="date" name="" id="start" placeholder="Début de l'évènement">
-            <label for="end">Fin</label>
-            <input  v-model="this.events.event_end" class="my-2" type="date" name="" id="end" placeholder="Fin de l'évènement">
 
-            <input class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded" type="submit" value="Modifier">
-        </form>
-    </div>
-
-<!-- Modal = Suppression d'évenement -->
-    <div v-if="deleteMode" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-        <div class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-56">
-            <button @click="toggleDeleteModal()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-                <span class="sr-only">Fermeture du modal</span>
-                <!-- Heroicon name: outline/x -->
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <h1 class="text-lg text-center leading-6 font-medium text-gray-900">Fin de l'évenement :</h1>
-            <div class="mt-2">
-                <p class="text-sm text-center text-gray-500">Êtes-vous sûr de vouloir mettre fin à cet évenement ? Celui-ci sera définitivement supprimé. Cette action ne peut être annulée.</p>
-            </div>
-            <div class="flex justify-center mt-3 mx-auto text-center sm:text-left">
-                <button type="submit" class="mr-20 btn hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded">Oui</button>
-                <button type="button" @click="toggleDeleteModal()" class="btn hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded">Non</button>
-            </div>
-       </div>
-   </div>
-   
 </template>
 
 <script>
@@ -189,7 +187,7 @@ export default {
         NavLink
     },
 
-    props: ['allEvents', 'errors', 'todayEvents', 'futurEvents'],
+    props: ['allEvents', 'errors', 'todayEvents', 'futurEvents', 'event'],
 
     data() {
         return {
@@ -198,7 +196,6 @@ export default {
             eventsAvenir: this.futurEvents,
             revele: false, // Affichage de la modale => Création 
             editMode: false, // Affichage de la modale => Modification
-            deleteMode: false, // Affichage de la modale => Suppression 
             showDataRanger: false, // Affichage du dateRange de MomentJS
             showTodayEvents: true,
             showAvenirEvents: false,
@@ -209,11 +206,10 @@ export default {
                 event_start: null,
                 event_end: null
             },
-            test: false,
         };
     },
     mounted() {
-        console.log(this.eventsAvenir)
+        console.log()
     },
     methods: {
         toggleTodayEvents() {
@@ -226,31 +222,48 @@ export default {
             this.showTodayEvents = false
             this.isAddClass = true;
         },
-
         toggleModale() {
             this.revele = !this.revele
         },
         toggleEdit(data) {
-            this.editMode = !this.editMode
             this.form = Object.assign({}, data);
-        },
-        toggleDeleteModal() {
-            this.deleteMode = !this.deleteMode
+            this.editMode = !this.editMode
         },
         toggleDataRanger() {
             this.showDataRanger = !this.showDataRanger
         },
+        closeModal() {
+            this.revele = false;
+            this.editMode = false;
+            this.deleteMode;
+        },
+        reset() {
+            this.form = {
+                event_name: null,
+                event_content: null,
+                event_start: null,
+                event_end: null
+            }
+        },
         dateTime(value) {
-            return moment(value).locale("fr").calendar()
+            return moment(value).locale("fr").calendar(null)
         },
-        add() {
-            this.$inertia.post('/event/add', this.form);
+        add(data) {
+            this.$inertia.post('/event/add', data);
+            this.closeModal();
         },
-        edit() {
-            this.$inertia.patch('/event/edit/' + this.events.id, this.events);
+        update(data) {
+            data._method = 'PATCH';
+            this.$inertia.post('/event/edit/' + data.id, data)
+            this.reset();
+            this.closeModal();
         },
-        delete(){
-            this.$inertia.delete('/event/delete/' + this.events.id, this.events)
+        deleteRow(data) {
+            if (!confirm('Êtes-vous sûr de vouloir mettre fin à cet évenement ?')) return;
+             data._method = 'DELETE';
+             this.$inertia.post('/event/delete/' + data.id, data)
+             this.reset();
+             this.closeModal();
         }
     }
 };

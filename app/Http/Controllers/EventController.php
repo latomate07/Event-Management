@@ -47,7 +47,7 @@ class EventController extends Controller
         $event = EventList::where('id', $id);
         $this->authorize('update', $event);
 
-        return Inertia::render('Courses/Edit', [
+        return Inertia::render('Events', [
             'event' => $event
         ]);
      }
