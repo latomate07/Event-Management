@@ -11,7 +11,7 @@ class EventController extends Controller
         public function index() {
         $eventList = EventList::with('user')->latest()->paginate(3);
         $todayEvents = EventList::with('user')->where('event_start', '=', date('Y-m-d'))->get(); // Récupérer les évenements d'aujourd'hui
-        $futurEvents = EventList::with('user')->where('event_start', '>', date('Y-m-d'))->get(); // Récupérer les évenements d'aujourd'hui
+        $futurEvents = EventList::with('user')->where('event_start', '>', date('Y-m-d'))->get(); // Récupérer les évenements à venir
 
         return Inertia::render('Events', [
             "allEvents" => $eventList,
