@@ -61,7 +61,10 @@ class User extends Authenticatable
 
 
 
+    /**
+     * Un utilisateur peut avoir plusieurs évenements
+     */
     public function events() {
-        return $this->hasMany(EventList::class);
+        return $this->hasMany(EventModel::class);
     }
 }

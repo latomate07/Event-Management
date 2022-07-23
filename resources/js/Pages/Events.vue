@@ -13,7 +13,7 @@ import 'moment/dist/locale/fr'
 
 <template>
     <Head title="Events"/>
-    <div class="pace-y-4 mx-20" v-if="$page.props.user">
+    <div class="pace-y-4 mx-20" v-if="$page.props.user"> <!-- Si utuilisateur connecté -->
         <header class="bg-white shadow space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
             <div class="flex items-center justify-between">
                 <h2 class="font-semibold text-slate-900">Mes évenements</h2>
@@ -44,7 +44,7 @@ import 'moment/dist/locale/fr'
                 </ul>
             </nav>
 
-            <div v-if="showTodayEvents" v-for="event in actualEvents" v-bind:key="event.id" >
+            <div v-if="showTodayEvents" v-for="event in actualEvents" v-bind:key="event.id" > 
                 <List>
                      <!-- Liste des évenements  -->
                     <ListItem class="bg-white shadow my-5">
@@ -74,13 +74,21 @@ import 'moment/dist/locale/fr'
 
                 <!-- Modal = Modification d'évenement  -->
                 <div v-if="editMode" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-                    <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="update(form)">
+                    <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96">
                         <button @click="toggleEdit()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                             <span class="sr-only">Fermeture du modal</span>
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+                        <div v-if="$page.props.flash.message" class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+                            <div class="flex">
+                                <div>
+                                    <p class="font-bold">Succès !</p>
+                                    <p class="text-sm">{{ $page.props.flash.message }}</p>
+                                </div>
+                            </div>
+                        </div>
                         <input v-model="event.event_name" class="my-2" type="text" name="" id="">
                         <textarea  v-model="event.event_content" class="my-2 resize-none" type="text" name="" id="" placeholder="Contenu de l'évènement"><slot name="event_content"></slot></textarea>
                         <label for="start">Début</label>
@@ -88,7 +96,7 @@ import 'moment/dist/locale/fr'
                         <label for="end">Fin</label>
                         <input  v-model="event.event_end" class="my-2" type="date" name="" id="end" placeholder="Fin de l'évènement">
 
-                        <input class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded" type="submit" value="Modifier">
+                        <input @click="update(form)" class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded" type="submit" value="Modifier">
                     </form>
                 </div>
             </div>
@@ -130,25 +138,33 @@ import 'moment/dist/locale/fr'
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-                        <input v-model="form.event_name" class="my-2" type="text" name="" id="">
+                        <div v-if="$page.props.flash.message" class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+                            <div class="flex">
+                                <div>
+                                    <p class="font-bold">Succès !</p>
+                                    <p class="text-sm">{{ $page.props.flash.message }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <input v-model="event.event_name" class="my-2" type="text" name="" id="">
                         <textarea  v-model="event.event_content" class="my-2 resize-none" type="text" name="" id="" placeholder="Contenu de l'évènement"><slot name="event_content"></slot></textarea>
                         <label for="start">Début</label>
                         <input  v-model="event.event_start" class="my-2" type="date" name="" id="start" placeholder="Début de l'évènement">
                         <label for="end">Fin</label>
                         <input  v-model="event.event_end" class="my-2" type="date" name="" id="end" placeholder="Fin de l'évènement">
 
-                        <input class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded" type="submit" value="Modifier">
+                        <input @click="update(form)" class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded" type="submit" value="Modifier">
                     </form>
                 </div>
             </div> <!-- End ShowAVenirEvents -->
         </div>
     </div>
 
-    <div v-else>
+    <div v-else> <!-- Et Si utilisateur non connecté -->
         <p>Vous devez vous connectez !</p>
     </div>
 
- <!-- Modal = Ajout d'évenement   -->
+    <!-- Modal = Ajout d'évenement   -->
     <div v-if="revele" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
         <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="add(form)">
             <button @click="toggleModale()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
