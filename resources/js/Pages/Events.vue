@@ -72,7 +72,7 @@ import 'moment/dist/locale/fr'
                     </ListItem>
                 </List>
 
-                 <!-- Modal = Modification d'évenement  -->
+                <!-- Modal = Modification d'évenement  -->
                 <div v-if="editMode" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
                     <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="update(form)">
                         <button @click="toggleEdit()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -81,7 +81,7 @@ import 'moment/dist/locale/fr'
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-                        <input v-model="event.event_name"  class="my-2" type="text" name="" id="">
+                        <input v-model="event.event_name" class="my-2" type="text" name="" id="">
                         <textarea  v-model="event.event_content" class="my-2 resize-none" type="text" name="" id="" placeholder="Contenu de l'évènement"><slot name="event_content"></slot></textarea>
                         <label for="start">Début</label>
                         <input  v-model="event.event_start" class="my-2" type="date" name="" id="start" placeholder="Début de l'évènement">
@@ -123,14 +123,14 @@ import 'moment/dist/locale/fr'
 
                 <!-- Modal = Modification d'évenement  -->
                 <div v-if="editMode" class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-                    <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="update(form)">
+                    <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="update(form)">
                         <button @click="toggleEdit()" type="button" class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                             <span class="sr-only">Fermeture du modal</span>
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-                        <input v-model="event.event_name"  class="my-2" type="text" name="" id="">
+                        <input v-model="form.event_name" class="my-2" type="text" name="" id="">
                         <textarea  v-model="event.event_content" class="my-2 resize-none" type="text" name="" id="" placeholder="Contenu de l'évènement"><slot name="event_content"></slot></textarea>
                         <label for="start">Début</label>
                         <input  v-model="event.event_start" class="my-2" type="date" name="" id="start" placeholder="Début de l'évènement">

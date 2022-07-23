@@ -11,7 +11,7 @@ class EventController extends Controller
         public function index() {
         $eventList = EventList::with('user')->latest()->paginate(3);
         $todayEvents = EventList::with('user')->where('event_start', '=', date('Y-m-d'))->get(); // Récupérer les évenements d'aujourd'hui
-        $futurEvents = EventList::with('user')->where('event_start', '>', date('Y-m-d'))->get(); // Récupérer les évenements à venir
+        $futurEvents = EventList::with('user')->where('event_start', '>', date('Y-m-d'))->get(); // Récupérer les évenements à
 
         return Inertia::render('Events', [
             "allEvents" => $eventList,
@@ -37,20 +37,6 @@ class EventController extends Controller
   
         return redirect()->back()->with('message', 'Événement crée avec succès !');
     }
-
-    /******
-     * function editEvent => Consiste à modifier un évenement // Modification à l'aide d'un modal
-     * Condition recevoir ID de l'évenement
-     */
-
-     public function editEvent(int $id) {
-        $event = EventList::where('id', $id);
-        $this->authorize('update', $event);
-
-        return Inertia::render('Events', [
-            'event' => $event
-        ]);
-     }
 
     /****
      * function updateEvent => Envoie requête pour mettre à jour dans la BDD
