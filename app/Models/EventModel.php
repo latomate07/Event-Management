@@ -28,7 +28,7 @@ class EventModel extends Model
     }
 
     /**
-     * Chaque évenement est relié à un évenement
+     * Chaque évenement est relié à un utilisateur
      */
     public function user() {
         return $this->belongsTo(User::class);
