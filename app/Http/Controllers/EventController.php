@@ -8,10 +8,14 @@ use Illuminate\Support\Facades\Redirect;
 
 class EventController extends Controller
 {   
-        public function index() {
+    /**
+     * Function index()
+     * Récupère et renvoie les évenements disponible
+     */
+    public function index() {
         $eventList = EventList::with('user')->latest()->paginate(3);
         $todayEvents = EventList::with('user')->where('event_start', '=', date('Y-m-d'))->get(); // Récupérer les évenements d'aujourd'hui
-        $futurEvents = EventList::with('user')->where('event_start', '>', date('Y-m-d'))->get(); // Récupérer les évenements à
+        $futurEvents = EventList::with('user')->where('event_start', '>', date('Y-m-d'))->get(); // Récupérer les évenements à venir
 
         return Inertia::render('Events', [
             "allEvents" => $eventList,
@@ -22,8 +26,8 @@ class EventController extends Controller
     
     /****
      * function AddEvent => Consiste à ajouter un évenement
-     * Condition recevoir titre de l'évenement -- Saisi par l'utilisateur
-     * Ajouter la date de création
+     * Condition => recevoir titre et contenu de l'évenement -- Saisi par l'utilisateur
+     * Ajouter la date de création et celle de la fin
      */
     public function addEvent(Request $request) { // Ajouter un évenement
         $validator = Validator::make($request->all(), [
@@ -56,7 +60,7 @@ class EventController extends Controller
     }
 
     /****
-     * function updateEvent => Consiste à modifier un évenement
+     * function deleteEvent => Consiste à supprimer un évenement
      * Condition recevoir ID de l'évenement
      */
     public function deleteEvent(Request $request) {
@@ -66,5 +70,4 @@ class EventController extends Controller
 
         return redirect()->back()->with('message', 'Évenement supprimé avec succès.');
     }
-
 }
