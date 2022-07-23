@@ -20,9 +20,9 @@ class EventController extends Controller
      */
     public function index() {
         return Inertia::render('Events', [
-            "allEvents" => $this->event->eventList(),
-            "todayEvents" => $this->event->todayEvents(),
-            "futurEvents" => $this->event->futurEvents()
+            "allEvents" => $this->event->eventList(), // Tout les évenements 
+            "todayEvents" => $this->event->todayEvents(), // Les évenements prévu pour aujourd'hui
+            "futurEvents" => $this->event->futurEvents() // Les évenements à venir
         ]);
     }
     
