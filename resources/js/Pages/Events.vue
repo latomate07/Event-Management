@@ -89,7 +89,7 @@ import Vue3Lottie from 'vue3-lottie';
                 </List>
 
                 <!-- Modal = Modification d'évenement  -->
-                <div v-if="editMode"
+                <div v-if="editMode && showTodayEvents"
                     class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
                     <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96">
                         <button @click="toggleEdit()" type="button"
@@ -121,7 +121,7 @@ import Vue3Lottie from 'vue3-lottie';
                         <input v-model="event.event_end" class="my-2" type="datetime-local" name="" id="end"
                             placeholder="Fin de l'évènement">
 
-                        <input @click="update(form)"
+                        <input
                             class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
                             type="submit" value="Modifier">
                     </form>
@@ -164,9 +164,9 @@ import Vue3Lottie from 'vue3-lottie';
                 </List>
 
                 <!-- Modal = Modification d'évenement  -->
-                <div v-if="editMode"
+                <div v-if="editMode && showAvenirEvents"
                     class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-                    <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96"
+                    <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto"
                         v-on:submit.prevent="update(form)">
                         <button @click="toggleEdit()" type="button"
                             class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -219,7 +219,7 @@ import Vue3Lottie from 'vue3-lottie';
     <!-- Modal = Ajout d'évenement   -->
     <div v-if="revele"
         class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-        <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96" v-on:submit.prevent="add(form)">
+        <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto" v-on:submit.prevent="add(form)">
             <button @click="toggleModale()" type="button"
                 class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <span class="sr-only">Fermeture du modal</span>
@@ -289,7 +289,7 @@ export default {
     },
     mounted() {
         if(this.actualEvents == "") {
-            console.log("euh")
+            console.log()
         }
     },
     methods: {
