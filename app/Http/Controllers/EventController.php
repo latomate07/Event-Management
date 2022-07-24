@@ -32,7 +32,7 @@ class EventController extends Controller
      * Ajouter la date de création et celle de la fin
      */
     public function addEvent(Request $request) { // Ajouter un évenement
-        $validator = Validator::make($request->all(), [
+        Validator::make($request->all(), [
             'event_name' => ['required'],
             'event_content' => ['required'],
             'event_start' => ['required'],
