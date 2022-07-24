@@ -29,7 +29,7 @@ import 'moment/dist/locale/fr';
                 </button>
             </div>
 
-            <form class="group relative" v-on:submit.prevent="filterThis(filterElements)">
+            <div class="group relative">
                 <svg width="20" height="20" fill="currentColor"
                     class="absolute left-3 top-1/2 -mt-2.5 text-slate-400 pointer-events-none group-focus-within:text-blue-500"
                     aria-hidden="true">
@@ -40,9 +40,9 @@ import 'moment/dist/locale/fr';
                      <input v-model="filterElements.start" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="datetime-local" name="event_start" id="">
                      <p class="px-2">-</p>
                      <input v-model="filterElements.end" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="datetime-local" name="event_end" id="">
-                     <input type="submit" class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer" value="Filtrer">
+                     <button type="button" @click="filterThis(filterElements)" class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer">Filtrer</button>
                 </div>
-            </form>
+            </div>
         </header>
 
         <div class="divide-y divide-slate-100 my-5 mx-2">
@@ -51,12 +51,12 @@ import 'moment/dist/locale/fr';
                     <li class="flex-1 mr-2">
                         <a @click="toggleTodayEvents()"
                             class="bg-blue-500 text-center border-blue-500 block border rounded py-2 px-4  hover:bg-blue-700 text-white"
-                            href="javascript:void(0)">Maintenant</a>
+                            href="javascript:void(0)" id="todayEvents">Aujourd'hui</a>
                     </li>
                     <li class="flex-1 mr-2">
                         <a @click="toggleAvenirEvents()"
-                            class="text-slate-800 text-center block border border-white rounded border-gray-200 bg-gray-200 border-gray-200 text-blue-500 py-2 px-4"
-                            href="javascript:void(0)">À venir</a>
+                            class="text-slate-800 text-center block border border-white rounded bg-gray-200 border-gray-200 text-blue-500 py-2 px-4"
+                            href="javascript:void(0)" id="avenirEvents">À venir</a>
                     </li>
                 </ul>
             </nav>
@@ -123,6 +123,37 @@ import 'moment/dist/locale/fr';
                 </List>
             </div> <!-- End ShowAVenirEvents -->
 
+            <div v-if="showFilterEvents" v-for="event in filterResult" v-bind:key="event.id">
+                <List>
+                    <!-- Liste des évenements  -->
+                    <ListItem class="bg-white shadow my-5">
+                        <template v-slot:title>
+                            {{ event.event_name }}
+                        </template>
+                        <template v-slot:event_content>
+                            {{ event.event_content }}
+                        </template>
+                        <template v-slot:updated_at>
+                            {{ dateTime(event.updated_at) }}
+                        </template>
+                        <template v-slot:start_events>
+                            {{ dateTime(event.event_start) }}
+                        </template>
+                        <template v-slot:end_events>
+                            {{ dateTime(event.event_end) }}
+                        </template>
+                        <template v-slot:toggleDeleteModal>
+                            <button @click="deleteRow(event)"
+                                class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
+                        </template>
+                        <template v-slot:toggleEdit>
+                            <button @click="toggleEdit(event)"
+                                class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
+                        </template>
+                    </ListItem>
+                </List>
+            </div> <!-- End showFilterEvents -->
+
             <!-- Si aucun évenement trouvé, afficher ce qui suit -->
             <div v-if="showAvenirEvents && eventsAvenir == '' || showTodayEvents && actualEvents == ''">
                 <p class="text-center p-10">Aucun évenement disponible pour cette sélection.</p>
@@ -139,7 +170,7 @@ import 'moment/dist/locale/fr';
     <!-- Modal = Ajout d'évenement   -->
     <div v-if="revele" class="w-full fixed inset-0 items-center flex z-50 transition-opacity rounded">
         <div class="overlay"></div>
-        <form class="modal flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto" v-on:submit.prevent="add(form)">
+        <div class="modal flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto">
             <button @click="toggleModale()" type="button"
                 class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <span class="sr-only">Fermeture du modal</span>
@@ -168,17 +199,16 @@ import 'moment/dist/locale/fr';
             <input v-model="form.event_end" class="my-2" type="datetime-local" name="" id="event_end"
                 placeholder="Fin de l'évènement">
 
-            <input
+            <button v-on:click.prevent ="add(form)"
                 class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
-                type="submit" value="Créer">
-        </form>
+                type="button">Créer</button>
+        </div>
     </div>
 
     <!-- Modal = Modification d'évenement  -->
     <div v-if="editMode" class="w-full fixed inset-0 items-center flex z-50 transition-opacity rounded">
         <div class="overlay"></div>
-        <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto modal"
-            v-on:submit.prevent="update(form)">
+        <div class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto modal">
             <button @click="toggleEdit()" type="button"
                 class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <span class="sr-only">Fermeture du modal</span>
@@ -206,10 +236,9 @@ import 'moment/dist/locale/fr';
             <input v-model="form.event_end" class="my-2" type="datetime-local" name="" id="end"
                 placeholder="Fin de l'évènement">
 
-            <input
-                class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
-                type="submit" value="Modifier">
-        </form>
+            <button @click="update(form)" class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
+               type="button">Modifier</button>
+        </div>
     </div>
 
 </template>
@@ -232,6 +261,7 @@ export default {
             eventsAvenir: this.futurEvents,
             revele: false, // Affichage de la modale => Création 
             editMode: false, // Affichage de la modale => Modification
+            filterMode: false, 
             showDataRanger: false, // Affichage du dateRange de MomentJS
             showTodayEvents: true,
             showAvenirEvents: false,
@@ -249,7 +279,40 @@ export default {
         };
     },
     mounted() {
-        console.log(this.filterResult)
+        /**
+         * Toggle Navigation links
+         */
+        const todayEvents = document.getElementById('todayEvents'),
+              avenirEvents = document.getElementById('avenirEvents'),
+              classes = {
+                active: [
+                    'bg-blue-500', 'border-blue-500', 'hover:bg-blue-700', 'navActive'
+                ],
+                inactive: [
+                    'text-slate-800', 'border-white', 'bg-gray-200', 'border-gray-200'
+                ]
+              };
+        todayEvents.onclick = function() {
+            classes.active.forEach((e) => {
+                todayEvents.classList.add(e)
+                avenirEvents.classList.remove(e)
+            })
+            classes.inactive.forEach((e) => {
+                avenirEvents.classList.add(e)
+                todayEvents.classList.remove(e)
+            })
+        }
+
+        avenirEvents.onclick = function() {
+            classes.active.forEach((e) => {
+                avenirEvents.classList.add(e)
+                todayEvents.classList.remove(e)
+            })
+            classes.inactive.forEach((e) => {
+                todayEvents.classList.add(e)
+                avenirEvents.classList.remove(e)
+            })
+        }
     },
     methods: {
         toggleTodayEvents() {
@@ -269,6 +332,9 @@ export default {
         },
         toggleDataRanger() {
             this.showDataRanger = !this.showDataRanger
+        },
+        toggleFilterMode() {
+            //this.rev
         },
         closeModal() {
             this.revele = false;
@@ -330,5 +396,9 @@ export default {
 
 .modal {
     z-index: 10;
+}
+
+.navActive {
+    color: rgb(255 255 255 / 1)!important;
 }
 </style>

@@ -78,8 +78,9 @@ class EventController extends Controller
      * Condition => recevoir le début et la fin des évenements souhaités
      */
     public function filterEvent(Request $request){
-        $start = $request->input('event_start');
-        $end = $request->input('event_end');
+        $start = $request->start;
+        $end = $request->end;
+
         return Inertia::render('Events', [
             "resultOfFilter" => $this->event->scopeFilter($start, $end)
         ]);
