@@ -89,9 +89,9 @@ import Vue3Lottie from 'vue3-lottie';
                 </List>
 
                 <!-- Modal = Modification d'évenement  -->
-                <div v-if="editMode && showTodayEvents"
-                    class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-                    <form v-bind:key="this.events.id" class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96">
+                <div v-if="editMode && showTodayEvents" class="w-full fixed inset-0 items-center flex z-50 transition-opacity rounded">
+                    <div class="overlay"></div>
+                    <form v-on:submit.prevent="update(form)" class="modal flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-96">
                         <button @click="toggleEdit()" type="button"
                             class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                             <span class="sr-only">Fermeture du modal</span>
@@ -164,9 +164,9 @@ import Vue3Lottie from 'vue3-lottie';
                 </List>
 
                 <!-- Modal = Modification d'évenement  -->
-                <div v-if="editMode && showAvenirEvents"
-                    class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-                    <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto"
+                <div v-if="editMode && showAvenirEvents" class="w-full fixed inset-0 items-center flex z-50 transition-opacity rounded">
+                    <div class="overlay"></div>
+                    <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto modal"
                         v-on:submit.prevent="update(form)">
                         <button @click="toggleEdit()" type="button"
                             class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -197,7 +197,7 @@ import Vue3Lottie from 'vue3-lottie';
                         <input v-model="event.event_end" class="my-2" type="datetime-local" name="" id="end"
                             placeholder="Fin de l'évènement">
 
-                        <input @click="update(form)"
+                        <input
                             class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
                             type="submit" value="Modifier">
                     </form>
@@ -217,9 +217,9 @@ import Vue3Lottie from 'vue3-lottie';
     </div>
 
     <!-- Modal = Ajout d'évenement   -->
-    <div v-if="revele"
-        class="w-full fixed inset-0 bg-slate-800 opacity-80 items-center flex z-50 transition-opacity rounded">
-        <form class="flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto" v-on:submit.prevent="add(form)">
+    <div v-if="revele" class="w-full fixed inset-0 items-center flex z-50 transition-opacity rounded">
+        <div class="overlay"></div>
+        <form class="modal flex flex-col p-5 bg-white shadow w-96 mx-auto my-0 h-auto" v-on:submit.prevent="add(form)">
             <button @click="toggleModale()" type="button"
                 class="bg-gray-100 rounded-md p-2 inline-flex items-center text-gray-400 float-right w-8 hover:text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <span class="sr-only">Fermeture du modal</span>
@@ -337,7 +337,7 @@ export default {
             data._method = 'PATCH';
             this.$inertia.post('/event/edit/' + data.id, data)
             this.reset();
-            this.closeModal();
+            //this.closeModal();
         },
         deleteRow(data) {
             if (!confirm('Êtes-vous sûr de vouloir mettre fin à cet évenement ?')) return;
@@ -349,3 +349,18 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.overlay{
+    position: fixed;
+    width: 100%;
+    background: rgba(0,0,0,0.5);;
+    height: 100%;
+    transition: background .5s ease-in-out;
+    z-index: 1;
+}
+
+.modal {
+    z-index: 10;
+}
+</style>
