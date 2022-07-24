@@ -89,11 +89,6 @@ import Vue3Lottie from 'vue3-lottie';
                 </List>
             </div> <!-- End today events -->
 
-            <!-- Si aucun évenement trouvé, afficher ce qui suit -->
-            <div v-if="showTodayEvents && actualEvents == ''">
-                <p class="text-center p-10">Aucun évenement disponible pour cette sélection.</p>
-            </div>
-
             <div v-if="showAvenirEvents" v-for="event in eventsAvenir" v-bind:key="event.id">
                 <List>
                     <!-- Liste des évenements  -->
@@ -126,7 +121,7 @@ import Vue3Lottie from 'vue3-lottie';
             </div> <!-- End ShowAVenirEvents -->
 
             <!-- Si aucun évenement trouvé, afficher ce qui suit -->
-            <div v-if="showAvenirEvents && eventsAvenir == ''">
+            <div v-if="showAvenirEvents && eventsAvenir == '' || showTodayEvents && actualEvents == ''">
                 <p class="text-center p-10">Aucun évenement disponible pour cette sélection.</p>
             </div>
 
