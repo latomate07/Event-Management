@@ -22,8 +22,8 @@ class EventModel extends Model
      * Ajouter ID utilisateur à celui qui créer un évenement
      */
     protected static function booted() {
-        static::creating(function($course) {
-            $course->user_id = auth()->id();
+        static::creating(function($events) {
+            $events->user_id = auth()->id();
         });
     }
 
