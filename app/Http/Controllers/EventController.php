@@ -63,7 +63,7 @@ class EventController extends Controller
 
     /****
      * function deleteEvent => Consiste à supprimer un évenement
-     * Condition recevoir ID de l'évenement
+     * Condition => recevoir ID de l'évenement
      */
     public function deleteEvent(Request $request) {
         $request->has('id') ? 
@@ -71,5 +71,17 @@ class EventController extends Controller
         redirect()->back()->with('errors', 'Une erreur a été produite.');
 
         return redirect()->back()->with('message', 'Évenement supprimé avec succès.');
+    }
+
+    /***
+     * DateRangePicker
+     * Condition => recevoir le début et la fin des évenements souhaités
+     */
+    public function filterEvent(Request $request){
+        $start = $request->input('event_start');
+        $end = $request->input('event_end');
+        return Inertia::render('Events', [
+            "resultOfFilter" => $this->event->scopeFilter($start, $end)
+        ]);
     }
 }

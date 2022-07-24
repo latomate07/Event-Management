@@ -8,7 +8,6 @@ import AppLayout from "@/layouts/AppLayout.vue";
 import moment from 'moment';
 import Pagination from '@/CustomComponents/Pagination.vue';
 import 'moment/dist/locale/fr';
-import Vue3Lottie from 'vue3-lottie';
 
 </script>
 
@@ -29,16 +28,20 @@ import Vue3Lottie from 'vue3-lottie';
                     Ajouter
                 </button>
             </div>
-            <form class="group relative">
+
+            <form class="group relative" v-on:submit.prevent="filterThis(filterElements)">
                 <svg width="20" height="20" fill="currentColor"
                     class="absolute left-3 top-1/2 -mt-2.5 text-slate-400 pointer-events-none group-focus-within:text-blue-500"
                     aria-hidden="true">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
                 </svg>
-                <Input name="dateRangeInput" @click="toggleDataRanger()"
-                    class="focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm"
-                    type="text" aria-label="Filter projects" placeholder="Filtrer les évenements..."></Input>
+                <div class="flex items-center focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm">
+                     <input v-model="filterElements.start" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="datetime-local" name="event_start" id="">
+                     <p class="px-2">-</p>
+                     <input v-model="filterElements.end" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="datetime-local" name="event_end" id="">
+                     <input type="submit" class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer" value="Filtrer">
+                </div>
             </form>
         </header>
 
@@ -48,7 +51,7 @@ import Vue3Lottie from 'vue3-lottie';
                     <li class="flex-1 mr-2">
                         <a @click="toggleTodayEvents()"
                             class="bg-blue-500 text-center border-blue-500 block border rounded py-2 px-4  hover:bg-blue-700 text-white"
-                            href="javascript:void(0)">Aujourd'hui</a>
+                            href="javascript:void(0)">Maintenant</a>
                     </li>
                     <li class="flex-1 mr-2">
                         <a @click="toggleAvenirEvents()"
@@ -217,11 +220,10 @@ export default {
     components: {
         AppLayout,
         List,
-        NavLink,
-        Vue3Lottie
+        NavLink
     },
 
-    props: ['allEvents', 'errors', 'todayEvents', 'futurEvents', 'event'],
+    props: ['allEvents', 'errors', 'todayEvents', 'futurEvents', 'resultOfFilter'],
 
     data() {
         return {
@@ -233,30 +235,30 @@ export default {
             showDataRanger: false, // Affichage du dateRange de MomentJS
             showTodayEvents: true,
             showAvenirEvents: false,
-            isAddClass: false,
             form: {
                 event_name: null,
                 event_content: null,
                 event_start: null,
                 event_end: null
             },
+            filterElements: { // Les élements nécessaires pour le filtre
+                start: null,
+                end: null
+            },
+            filterResult: this.resultOfFilter
         };
     },
     mounted() {
-        if (this.actualEvents == "") {
-            console.log()
-        }
+        console.log(this.filterResult)
     },
     methods: {
         toggleTodayEvents() {
             this.showTodayEvents = true
             this.showAvenirEvents = false
-            this.isAddClass = true;
         },
         toggleAvenirEvents() {
             this.showAvenirEvents = true
             this.showTodayEvents = false
-            this.isAddClass = true;
         },
         toggleModale() {
             this.revele = !this.revele
@@ -281,25 +283,35 @@ export default {
                 event_end: null
             }
         },
+        refresh() {
+            this.$forceUpdate();
+        },
         dateTime(value) {
             return moment(value).locale("fr").calendar(null)
         },
         add(data) {
-            this.$inertia.post('/event/add', data);
+            this.$inertia.post('/events/add', data);
+            this.refresh();
             this.closeModal();
         },
         update(data) {
             data._method = 'PATCH';
-            this.$inertia.post('/event/edit/' + data.id, data)
+            this.$inertia.post('/events/edit/' + data.id, data)
             this.reset();
-            //this.closeModal();
+            this.refresh();
+            this.closeModal();
         },
         deleteRow(data) {
             if (!confirm('Êtes-vous sûr de vouloir mettre fin à cet évenement ?')) return;
             data._method = 'DELETE';
-            this.$inertia.post('/event/delete/' + data.id, data)
+            this.$inertia.post('/events/delete/' + data.id, data)
             this.reset();
+            this.refresh();
             this.closeModal();
+        },
+        filterThis(data) { 
+            this.$inertia.get('/events/filter', data);
+            this.refresh();
         }
     }
 };

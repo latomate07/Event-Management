@@ -26,11 +26,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/events', [EventController::class, "index"]);
-Route::post('/event/add', [EventController::class, 'addEvent']);
-Route::patch('/event/edit/{id}', [EventController::class, 'updateEvent']);
-Route::delete('/event/delete/{id}', [EventController::class, 'deleteEvent']);
-
+Route::get('/events', [EventController::class, "index"]); // Afficher
+Route::post('/events/add', [EventController::class, 'addEvent']); // Ajouter
+Route::patch('/events/edit/{id}', [EventController::class, 'updateEvent']); // Mettre à jour
+Route::delete('/events/delete/{id}', [EventController::class, 'deleteEvent']); // Supprimer
+Route::get('/events/filter', [EventController::class, 'filterEvent']); // Filtrer
 
 Route::middleware([
     'auth:sanctum',
