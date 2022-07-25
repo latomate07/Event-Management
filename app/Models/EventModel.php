@@ -47,7 +47,7 @@ class EventModel extends Model
      * Récupère et envoie au controlleur les évenements du jour crée par un utilisateur
      */
     public function todayEvents() {
-        return $this->with('user')->where('event_start', '=', date('Y-m-d H:i'))->get();
+        return $this->with('user')->where('event_start', date('Y-m-d'))->get();
     }
 
      /****
@@ -55,7 +55,7 @@ class EventModel extends Model
      * Récupère et envoie au controlleur les évenements à venir crée par un utilisateur
      */
     public function futurEvents() {
-        return $this->with('user')->where('event_start', '>', date("Y-m-d H:i"))->get();
+        return $this->with('user')->where('event_start', '>', date("Y-m-d"))->get();
     }
 
     /***
@@ -64,6 +64,6 @@ class EventModel extends Model
      * Renvoie les résultats correspondants
      */
     public function scopeFilter($event_start, $event_end) {
-        return $this->with('user')->where('event_start', '=', $event_start)->where('event_end', '=', $event_end)->get();
+        return $this->with('user')->where('event_start', $event_start)->where('event_end', $event_end)->get();
     }
 }
