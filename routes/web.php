@@ -21,8 +21,6 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        // 'users' => User::all(), // Récupérer tout les utilisateurs
-        'users' => ["barry", "mohamed"]
     ]);
 });
 
