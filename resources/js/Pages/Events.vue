@@ -36,22 +36,31 @@ import 'moment/dist/locale/fr';
                     <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
                 </svg>
-                <div class="flex items-center focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm">
-                     <input v-model="filterElements.start" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="date" name="event_start" id="">
-                     <p class="px-2">-</p>
-                     <input v-model="filterElements.end" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="date" name="event_end" id="">
-                     <button type="submit" @click= "filterThis(filterElements)"  class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer">Filtrer</button>
-                     <Link v-if="filterMode" :href="route('events')"
-                     class="ml-2 bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-red-400 rounded shadow cursor-pointer">
-                     Supprimer le filtre
-                     </Link>
+                <div
+                    class="flex items-center focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm">
+                    <input v-model="filterElements.start"
+                        class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm"
+                        type="date" name="event_start" id="">
+                    <p class="px-2">-</p>
+                    <input v-model="filterElements.end"
+                        class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm"
+                        type="date" name="event_end" id="">
+                    <button type="submit" @click="filterThis(filterElements)"
+                        class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer">
+                        Filtrer
+                    </button>
+                    <Link v-if="filterMode" :href="route('events')"
+                        class="ml-2 bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-red-400 rounded shadow cursor-pointer">
+                    Supprimer le filtre
+                    </Link>
                 </div>
             </form>
         </header>
 
         <div class="divide-y divide-slate-100 my-5 mx-2">
             <nav>
-                <ul class="flex" v-if="filterMode != true"> <!-- Si aucun filtre -->
+                <ul class="flex" v-if="filterMode != true">
+                    <!-- Si aucun filtre -->
                     <li class="flex-1 mr-2">
                         <a @click="toggleTodayEvents()"
                             class="bg-blue-500 text-center border-blue-500 block border rounded py-2 px-4  hover:bg-blue-700 text-white"
@@ -64,9 +73,11 @@ import 'moment/dist/locale/fr';
                     </li>
                 </ul>
 
-                <ul v-else> <!-- Si filtre existe -->
+                <ul v-else>
+                    <!-- Si filtre existe -->
                     <li class="flex-1 mr-2">
-                        <a class="bg-blue-500 text-center border-blue-500 block border rounded py-2 px-4  hover:bg-blue-700 text-white" href="javascript:void(0)">Résultat du filtre</a>
+                        <a class="bg-blue-500 text-center border-blue-500 block border rounded py-2 px-4  hover:bg-blue-700 text-white"
+                            href="javascript:void(0)">Résultat du filtre</a>
                     </li>
                 </ul>
             </nav>
@@ -213,9 +224,16 @@ import 'moment/dist/locale/fr';
             <input v-model="form.event_end" class="my-2" type="date" name="" id="event_end"
                 placeholder="Fin de l'évènement">
 
-            <button v-on:click.prevent ="add(form)"
-                class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
-                type="button">Créer</button>
+            <div class="w-full flex justify-around">
+                <button v-on:click.prevent="add(form)"
+                    class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
+                    type="button">Créer</button>
+
+                <button @click="closeModal()"
+                    class="hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 cursor-pointer hover:border-transparent rounded"
+                    type="button">Quitter</button>
+            </div>
+
         </div>
     </div>
 
@@ -247,11 +265,17 @@ import 'moment/dist/locale/fr';
             <input v-model="form.event_start" class="my-2" type="date" name="" id="start"
                 placeholder="Début de l'évènement">
             <label for="end">Fin</label>
-            <input v-model="form.event_end" class="my-2" type="date" name="" id="end"
-                placeholder="Fin de l'évènement">
+            <input v-model="form.event_end" class="my-2" type="date" name="" id="end" placeholder="Fin de l'évènement">
 
-            <button @click="update(form)" class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
-               type="button">Modifier</button>
+            <div class="w-full flex justify-around">
+                <button @click="update(form)"
+                    class="hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 cursor-pointer hover:border-transparent rounded"
+                    type="button">Modifier</button>
+
+                <button @click="closeModal()"
+                    class="hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 cursor-pointer hover:border-transparent rounded"
+                    type="button">Quitter</button>
+            </div>
         </div>
     </div>
 
@@ -272,7 +296,7 @@ export default {
         return {
             /***
              * Stocker les données reçus dans une variable
-            */ 
+            */
             events: this.allEvents,
             actualEvents: this.todayEvents,
             eventsAvenir: this.futurEvents,
@@ -284,7 +308,7 @@ export default {
             editMode: false, // Affichage de la modale => Modification
             showDataRanger: false, // Affichage du dateRange de MomentJS
 
-            filterMode: false, 
+            filterMode: false,
             showTodayEvents: true,
             showAvenirEvents: false,
 
@@ -309,16 +333,16 @@ export default {
          * Toggle Navigation links -- Fonctionnalité visuelle de la navigation
          */
         const todayEvents = document.getElementById('todayEvents'),
-              avenirEvents = document.getElementById('avenirEvents'),
-              classes = {
+            avenirEvents = document.getElementById('avenirEvents'),
+            classes = {
                 active: [
                     'bg-blue-500', 'border-blue-500', 'hover:bg-blue-700', 'navActive'
                 ],
                 inactive: [
                     'text-slate-800', 'border-white', 'bg-gray-200', 'border-gray-200'
                 ]
-              };
-        todayEvents.onclick = function() {
+            };
+        todayEvents.onclick = function () {
             classes.active.forEach((e) => {
                 todayEvents.classList.add(e)
                 avenirEvents.classList.remove(e)
@@ -329,7 +353,7 @@ export default {
             })
         }
 
-        avenirEvents.onclick = function() {
+        avenirEvents.onclick = function () {
             classes.active.forEach((e) => {
                 avenirEvents.classList.add(e)
                 todayEvents.classList.remove(e)
@@ -344,7 +368,7 @@ export default {
          * Test
          */
 
-        console.log(this.resultOfFilter)
+        console.log(this.$attrs.flash)
     },
     methods: {
         test() {
@@ -371,7 +395,7 @@ export default {
         closeModal() {
             this.revele = false;
             this.editMode = false;
-            this.deleteMode;
+            this.$attrs.flash.message = "" // Supprimer le message du serveur
         },
         reset() {
             this.form = {
@@ -393,22 +417,20 @@ export default {
         },
         add(data) {
             this.$inertia.post('/events/add', data, { preserveScroll: true });
-            this.closeModal();
+            this.reset();
         },
         update(data) {
             data._method = 'PATCH';
             this.$inertia.post('/events/edit/' + data.id, data, { preserveScroll: true })
             this.reset();
-            this.closeModal();
         },
         deleteRow(data) {
             if (!confirm('Êtes-vous sûr de vouloir mettre fin à cet évenement ?')) return;
             data._method = 'DELETE';
             this.$inertia.post('/events/delete/' + data.id, data, { preserveScroll: true })
             this.reset();
-            this.closeModal();
         },
-        filterThis(data) { 
+        filterThis(data) {
             this.filterMode = true;
             this.$inertia.get('/events/filter', data, { preserveState: true });
             this.showTodayEvents = false
@@ -434,6 +456,6 @@ export default {
 }
 
 .navActive {
-    color: rgb(255 255 255 / 1)!important;
+    color: rgb(255 255 255 / 1) !important;
 }
 </style>
