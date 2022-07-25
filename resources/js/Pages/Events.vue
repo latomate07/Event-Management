@@ -40,7 +40,9 @@ import 'moment/dist/locale/fr';
                      <input v-model="filterElements.start" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="date" name="event_start" id="">
                      <p class="px-2">-</p>
                      <input v-model="filterElements.end" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="date" name="event_end" id="">
-                     <button type="submit" @click= "filterMode = true; filterThis(filterElements)"  class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer">Filtrer</button>
+                     <button type="submit" @click= "filterThis(filterElements)"  class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer">Filtrer</button>
+                     <Link v-if="filterMode" :href="route('events')"
+                     class="ml-2 bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-red-400 rounded shadow cursor-pointer">Supprimer le filtre</Link>
                 </div>
             </form>
         </header>
@@ -378,7 +380,14 @@ export default {
             }
         },
         dateTime(value) {
-            return moment(value).locale("fr").calendar(null)
+            return moment(value).locale("fr").calendar({
+                sameDay: "[Aujoud'hui]",
+                nextDay: '[Demain]',
+                nextWeek: 'dddd',
+                lastDay: '[Hier]',
+                lastWeek: 'dddd [dernier]',
+                sameElse: 'DD/MM/YYYY'
+            })
         },
         add(data) {
             this.$inertia.post('/events/add', data, { preserveScroll: true });
@@ -398,6 +407,7 @@ export default {
             this.closeModal();
         },
         filterThis(data) { 
+            this.filterMode = true;
             this.$inertia.get('/events/filter', data, { preserveState: true });
             this.showTodayEvents = false
             this.showAvenirEvents = false

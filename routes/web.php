@@ -26,7 +26,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/events', [EventController::class, "index"]); // Afficher
+Route::get('/events', [EventController::class, "index"])->name('events'); // Afficher
 Route::post('/events/add', [EventController::class, 'addEvent']); // Ajouter
 Route::patch('/events/edit/{id}', [EventController::class, 'updateEvent']); // Mettre à jour
 Route::delete('/events/delete/{id}', [EventController::class, 'deleteEvent']); // Supprimer

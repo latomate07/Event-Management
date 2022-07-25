@@ -65,5 +65,6 @@ class EventModel extends Model
      */
     public function scopeFilter($event_start, $event_end) {
         return $this->with('user')->where('event_start', $event_start)->where('event_end', $event_end)->get();
+        //return $this->with('user')->whereBetween('event_start', [$event_start, $event_end])->get(); 
     }
 }
