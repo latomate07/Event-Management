@@ -42,7 +42,9 @@ import 'moment/dist/locale/fr';
                      <input v-model="filterElements.end" class="appearance-none text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md ring-1 ring-slate-200 hover:shadow-sm" type="date" name="event_end" id="">
                      <button type="submit" @click= "filterThis(filterElements)"  class="ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow cursor-pointer">Filtrer</button>
                      <Link v-if="filterMode" :href="route('events')"
-                     class="ml-2 bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-red-400 rounded shadow cursor-pointer">Supprimer le filtre</Link>
+                     class="ml-2 bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-red-400 rounded shadow cursor-pointer">
+                     Supprimer le filtre
+                     </Link>
                 </div>
             </form>
         </header>
