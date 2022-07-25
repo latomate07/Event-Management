@@ -368,7 +368,7 @@ export default {
          * Test
          */
 
-        console.log(this.$attrs.flash)
+        // console.log(this.$attrs.flash)
     },
     methods: {
         test() {
