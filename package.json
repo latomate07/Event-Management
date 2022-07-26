@@ -2,6 +2,9 @@
     "private": true,
     "scripts": {
         "dev": "vite",
+        "postinstall": "npm run production",
+        "heroku-prebuild": "npm install -f",
+        "heroku-postbuild": "npm run production",
         "build": "vite build"
     },
     "devDependencies": {
