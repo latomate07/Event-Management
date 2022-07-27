@@ -29,15 +29,11 @@ Route::patch('/events/edit/{id}', [EventController::class, 'updateEvent']); // M
 Route::delete('/events/delete/{id}', [EventController::class, 'deleteEvent']); // Supprimer
 Route::get('/events/filter', [EventController::class, 'filterEvent']); // Filtrer
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', ])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-Route::get('/events', [EventController::class, "index"])->name('events'); // Afficher
 
+    Route::get('/events', [EventController::class, "index"])->name('events'); // Afficher
 });
 
