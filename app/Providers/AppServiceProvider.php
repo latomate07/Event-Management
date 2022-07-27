@@ -37,5 +37,8 @@ class AppServiceProvider extends ServiceProvider
                 'message' => Session::get('message'),
             ];
         });
+        if(config('app.env') === 'production') {
+            \URL::forceScheme('https');
+         }
     }
 }
