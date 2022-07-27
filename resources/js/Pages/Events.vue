@@ -13,7 +13,7 @@ import 'moment/dist/locale/fr';
 <template>
 
     <Head title="Events" />
-    <div class="pace-y-4 mx-20" v-if="$page.props.user">
+    <div class="pace-y-4 mx-20">
         <!-- Si utuilisateur connecté -->
         <header class="bg-white shadow space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
             <div class="flex items-center justify-between">
@@ -184,11 +184,6 @@ import 'moment/dist/locale/fr';
             </div>
 
         </div>
-    </div>
-
-    <div v-else>
-        <!-- Et Si utilisateur non connecté -->
-        <p class="text-center pace-y-4 mx-20">Vous devez vous connectez !</p>
     </div>
 
     <!-- Modal = Ajout d'évenement   -->
