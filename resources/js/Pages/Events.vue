@@ -4,7 +4,6 @@ import NavLink from "@/Jetstream/NavLink.vue";
 import Input from "@/Jetstream/Input.vue";
 import List from "@/CustomComponents/List.vue";
 import ListItem from "@/CustomComponents/ListItem.vue";
-import AppLayout from "@/layouts/AppLayout.vue";
 import moment from 'moment';
 import Pagination from '@/CustomComponents/Pagination.vue';
 import 'moment/dist/locale/fr';
@@ -285,7 +284,6 @@ import 'moment/dist/locale/fr';
 
 export default {
     components: {
-        AppLayout,
         List,
         NavLink
     },
