@@ -322,7 +322,45 @@ export default {
             }
         };
     },
-    
+    mounted() {
+        /**
+         * Toggle Navigation links -- Fonctionnalité visuelle de la navigation
+         */
+        const todayEvents = document.getElementById('todayEvents'),
+            avenirEvents = document.getElementById('avenirEvents'),
+            classes = {
+                active: [
+                    'bg-blue-500', 'border-blue-500', 'hover:bg-blue-700', 'navActive'
+                ],
+                inactive: [
+                    'text-slate-800', 'border-white', 'bg-gray-200', 'border-gray-200'
+                ]
+            };
+        todayEvents.onclick = function () {
+            classes.active.forEach((e) => {
+                todayEvents.classList.add(e)
+                avenirEvents.classList.remove(e)
+            })
+            classes.inactive.forEach((e) => {
+                avenirEvents.classList.add(e)
+                todayEvents.classList.remove(e)
+            })
+        }
+        avenirEvents.onclick = function () {
+            classes.active.forEach((e) => {
+                avenirEvents.classList.add(e)
+                todayEvents.classList.remove(e)
+            })
+            classes.inactive.forEach((e) => {
+                todayEvents.classList.add(e)
+                avenirEvents.classList.remove(e)
+            })
+        }
+        /**
+         * Test
+         */
+        console.log(this.$attrs.flash)
+    },
     methods: {
         toggleTodayEvents() {
             this.showTodayEvents = true
