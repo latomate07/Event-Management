@@ -5,14 +5,12 @@ import Input from "@/Jetstream/Input.vue";
 import List from "@/CustomComponents/List.vue";
 import ListItem from "@/CustomComponents/ListItem.vue";
 import moment from 'moment';
-import { onMounted } from 'vue';
 import Pagination from '@/CustomComponents/Pagination.vue';
 import 'moment/dist/locale/fr';
 
 </script>
 
 <template>
-
     <Head title="Events" />
     <div class="pace-y-4 mx-20">
         <!-- Si utuilisateur connecté -->
@@ -281,10 +279,13 @@ import 'moment/dist/locale/fr';
 export default {
     components: {
         List,
-        NavLink
+        NavLink,
+        Input,
+        List,
+        ListItem
     },
 
-    props: ['allEvents', 'errors', 'todayEvents', 'futurEvents', 'resultOfFilter'],
+    props: ['allEvents', 'todayEvents', 'futurEvents', 'resultOfFilter'],
 
     data() {
         return {
