@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use auth;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EventModel extends Model
 {
@@ -64,7 +64,10 @@ class EventModel extends Model
      * Renvoie les résultats correspondants
      */
     public function scopeFilter($event_start, $event_end) {
-        return $this->with('user')->where('event_start', $event_start)->where('event_end', $event_end)->get();
-        //return $this->with('user')->whereBetween('event_start', [$event_start, $event_end])->get(); 
+        // return $this->with('user')->where('event_start', $event_start)->where('event_end', $event_end)->get();
+
+        return $this->with('user')->whereBetween('event_start', [$event_start, $event_end])
+                                  ->whereBetween('event_end', [$event_start, $event_end])
+                                  ->get(); 
     }
 }

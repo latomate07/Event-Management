@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
+
 use Inertia\Inertia;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\EventModel;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {   
