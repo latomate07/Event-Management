@@ -5,7 +5,8 @@ use Inertia\Inertia;
 use App\Models\EventModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\AddEventRequest;
+use App\Http\Requests\UpdateEventRequest;
 
 class EventController extends Controller
 {   
@@ -33,14 +34,7 @@ class EventController extends Controller
      * Condition => recevoir titre et contenu de l'évenement -- Saisi par l'utilisateur
      * Ajouter la date de création et celle de la fin
      */
-    public function addEvent(Request $request) { // Ajouter un évenement
-        Validator::make($request->all(), [
-            'event_name' => ['required'],
-            'event_content' => ['required'],
-            'event_start' => ['required'],
-            'event_end' => ['required']
-        ])->validate();
-  
+    public function addEvent(AddEventRequest $request) { // Ajouter un évenement
         $this->event::create($request->all());
   
         return redirect()->back()->with('message', 'Événement crée avec succès !');
@@ -49,16 +43,9 @@ class EventController extends Controller
     /****
      * function updateEvent => Envoie requête pour mettre à jour dans la BDD
      */
-    public function updateEvent(Request $request) {
-        Validator::make($request->all(), [
-            'event_name' => ['required'],
-            'event_content' => ['required'],
-            'event_start' => ['required'],
-            'event_end' => ['required']
-        ])->validate();
-  
+    public function updateEvent(UpdateEventRequest $request) {
         if ($request->has('id')) {
-            $this->event::find($request->input('id'))->update($request->all());
+            $this->event::find($request->id)->update($request->all());
             return redirect()->back()->with('message', 'Mise à jour effectuée avec succès.');
         }
     }
@@ -68,9 +55,7 @@ class EventController extends Controller
      * Condition => recevoir ID de l'évenement
      */
     public function deleteEvent(Request $request) {
-        $request->has('id') ? 
-        $this->event::find($request->input('id'))->delete() :
-        redirect()->back()->with('errors', 'Une erreur a été produite.');
+        $request->has('id') ? $this->event::find($request->id)->delete() : redirect()->back()->with('errors', 'Une erreur a été produite.');
 
         return redirect()->back()->with('message', 'Évenement supprimé avec succès.');
     }
