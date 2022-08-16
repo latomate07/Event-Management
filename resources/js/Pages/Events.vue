@@ -1,17 +1,4 @@
-<script setup>
-import { Head, Link } from "@inertiajs/inertia-vue3";
-import NavLink from "@/Jetstream/NavLink.vue";
-import Input from "@/Jetstream/Input.vue";
-import List from "@/CustomComponents/List.vue";
-import ListItem from "@/CustomComponents/ListItem.vue";
-import moment from 'moment';
-import Pagination from '@/CustomComponents/Pagination.vue';
-import 'moment/dist/locale/fr';
-
-</script>
-
 <template>
-    <Head title="Events" />
     <div class="pace-y-4 mx-20">
         <!-- Si utuilisateur connecté -->
         <header class="bg-white shadow space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
@@ -80,109 +67,118 @@ import 'moment/dist/locale/fr';
                 </ul>
             </nav>
 
-            <div v-if="showTodayEvents" v-for="event in this.todayEvents" v-bind:key="event.id">
-                <List>
-                    <!-- Liste des évenements  -->
-                    <ListItem class="bg-white shadow my-5">
-                        <template v-slot:title>
-                            {{ event.event_name }}
-                        </template>
-                        <template v-slot:event_content>
-                            {{ event.event_content }}
-                        </template>
-                        <template v-slot:updated_at>
-                            {{ dateTime(event.updated_at) }}
-                        </template>
-                        <template v-slot:start_events>
-                            {{ dateTime(event.event_start) }}
-                        </template>
-                        <template v-slot:end_events>
-                            {{ dateTime(event.event_end) }}
-                        </template>
-                        <template v-slot:toggleDeleteModal>
-                            <button @click="deleteRow(event)"
-                                class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
-                        </template>
-                        <template v-slot:toggleEdit>
-                            <button @click="toggleEdit(event)"
-                                class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
-                        </template>
-                    </ListItem>
-                </List>
-            </div> <!-- End today events -->
-
-            <div v-if="showAvenirEvents" v-for="event in this.futurEvents" v-bind:key="event.id">
-                <List>
-                    <!-- Liste des évenements  -->
-                    <ListItem class="bg-white shadow my-5">
-                        <template v-slot:title>
-                            {{ event.event_name }}
-                        </template>
-                        <template v-slot:event_content>
-                            {{ event.event_content }}
-                        </template>
-                        <template v-slot:updated_at>
-                            {{ dateTime(event.updated_at) }}
-                        </template>
-                        <template v-slot:start_events>
-                            {{ dateTime(event.event_start) }}
-                        </template>
-                        <template v-slot:end_events>
-                            {{ dateTime(event.event_end) }}
-                        </template>
-                        <template v-slot:toggleDeleteModal>
-                            <button @click="deleteRow(event)"
-                                class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
-                        </template>
-                        <template v-slot:toggleEdit>
-                            <button @click="toggleEdit(event)"
-                                class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
-                        </template>
-                    </ListItem>
-                </List>
-            </div> <!-- End ShowAVenirEvents -->
-
-            <div v-if="filterMode" v-for="event in this.resultOfFilter" v-bind:key="event.id">
-                <List>
-                    <!-- Liste des évenements  -->
-                    <ListItem class="bg-white shadow my-5">
-                        <template v-slot:title>
-                            {{ event.event_name }}
-                        </template>
-                        <template v-slot:event_content>
-                            {{ event.event_content }}
-                        </template>
-                        <template v-slot:updated_at>
-                            {{ dateTime(event.updated_at) }}
-                        </template>
-                        <template v-slot:start_events>
-                            {{ dateTime(event.event_start) }}
-                        </template>
-                        <template v-slot:end_events>
-                            {{ dateTime(event.event_end) }}
-                        </template>
-                        <template v-slot:toggleDeleteModal>
-                            <button @click="deleteRow(event)"
-                                class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
-                        </template>
-                        <template v-slot:toggleEdit>
-                            <button @click="toggleEdit(event)"
-                                class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
-                        </template>
-                    </ListItem>
-                </List>
-            </div> <!-- End showFilterEvents -->
-
-            <!-- Si aucun évenement trouvé, afficher ce qui suit -->
-            <div v-if="showAvenirEvents && eventsAvenir == '' || showTodayEvents && actualEvents == ''">
-                <p class="text-center p-10">Aucun évenement disponible pour cette sélection.</p>
+            <div v-if="showTodayEvents">
+                <div v-for="event in this.todayEvents" v-bind:key="event.id">
+                    <List>
+                        <!-- Liste des évenements  -->
+                        <ListItem class="bg-white shadow my-5">
+                            <template v-slot:title>
+                                {{ event.event_name }}
+                            </template>
+                            <template v-slot:event_content>
+                                {{ event.event_content }}
+                            </template>
+                            <template v-slot:updated_at>
+                                {{ dateTime(event.updated_at) }}
+                            </template>
+                            <template v-slot:start_events>
+                                {{ dateTime(event.event_start) }}
+                            </template>
+                            <template v-slot:end_events>
+                                {{ dateTime(event.event_end) }}
+                            </template>
+                            <template v-slot:toggleDeleteModal>
+                                <button @click="deleteRow(event)"
+                                    class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
+                            </template>
+                            <template v-slot:toggleEdit>
+                                <button @click="toggleEdit(event)"
+                                    class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
+                            </template>
+                        </ListItem>
+                    </List>
+                </div> <!-- End today events -->
             </div>
 
-            <div v-else-if="filterMode && resultOfFilter == ''">
-                <p class="text-center p-10">Votre filtre ne correspond à aucun résultat.</p>
+
+            <div v-if="showAvenirEvents">
+                <div v-for="event in this.futurEvents" v-bind:key="event.id">
+                    <List>
+                        <!-- Liste des évenements  -->
+                        <ListItem class="bg-white shadow my-5">
+                            <template v-slot:title>
+                                {{ event.event_name }}
+                            </template>
+                            <template v-slot:event_content>
+                                {{ event.event_content }}
+                            </template>
+                            <template v-slot:updated_at>
+                                {{ dateTime(event.updated_at) }}
+                            </template>
+                            <template v-slot:start_events>
+                                {{ dateTime(event.event_start) }}
+                            </template>
+                            <template v-slot:end_events>
+                                {{ dateTime(event.event_end) }}
+                            </template>
+                            <template v-slot:toggleDeleteModal>
+                                <button @click="deleteRow(event)"
+                                    class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
+                            </template>
+                            <template v-slot:toggleEdit>
+                                <button @click="toggleEdit(event)"
+                                    class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
+                            </template>
+                        </ListItem>
+                    </List>
+                </div> <!-- End ShowAVenirEvents -->
             </div>
+
+
+            <div v-if="filterMode">
+                <div v-for="event in this.resultOfFilter" v-bind:key="event.id">
+                    <List>
+                        <!-- Liste des évenements  -->
+                        <ListItem class="bg-white shadow my-5">
+                            <template v-slot:title>
+                                {{ event.event_name }}
+                            </template>
+                            <template v-slot:event_content>
+                                {{ event.event_content }}
+                            </template>
+                            <template v-slot:updated_at>
+                                {{ dateTime(event.updated_at) }}
+                            </template>
+                            <template v-slot:start_events>
+                                {{ dateTime(event.event_start) }}
+                            </template>
+                            <template v-slot:end_events>
+                                {{ dateTime(event.event_end) }}
+                            </template>
+                            <template v-slot:toggleDeleteModal>
+                                <button @click="deleteRow(event)"
+                                    class="mt-5 float-right bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Terminer</button>
+                            </template>
+                            <template v-slot:toggleEdit>
+                                <button @click="toggleEdit(event)"
+                                    class="m-5 float-right bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Modifier</button>
+                            </template>
+                        </ListItem>
+                    </List>
+                </div>
+            </div><!-- End showFilterEvents -->
 
         </div>
+
+        <!-- Si aucun évenement trouvé, afficher ce qui suit -->
+        <div v-if="showAvenirEvents && eventsAvenir == '' || showTodayEvents && actualEvents == ''">
+            <p class="text-center p-10">Aucun évenement disponible pour cette sélection.</p>
+        </div>
+
+        <div v-else-if="filterMode && resultOfFilter == ''">
+            <p class="text-center p-10">Votre filtre ne correspond à aucun résultat.</p>
+        </div>
+
     </div>
 
     <!-- Modal = Ajout d'évenement   -->
@@ -275,11 +271,21 @@ import 'moment/dist/locale/fr';
 </template>
 
 <script>
+import { Head, Link} from '@inertiajs/inertia-vue3';
+import NavLink from "@/Jetstream/NavLink.vue";
+import Input from "@/Jetstream/Input.vue";
+import List from "@/CustomComponents/List.vue";
+import ListItem from "@/CustomComponents/ListItem.vue";
+import moment from 'moment';
+import Pagination from '@/CustomComponents/Pagination.vue';
+import 'moment/dist/locale/fr';
 
 export default {
     components: {
         List,
         NavLink,
+        Head,
+        Link,
         Input,
         List,
         ListItem
