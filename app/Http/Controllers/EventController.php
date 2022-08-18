@@ -10,11 +10,11 @@ use App\Repositories\EventRepository;
 
 class EventController extends Controller
 {   
-    protected $event;
+    protected $eventRepository;
 
     public function __construct(EventRepository $event)
     {
-        $this->EventRepository = $event;
+        $this->eventRepository = $event;
     }
     /**
      * Function index()
@@ -22,9 +22,9 @@ class EventController extends Controller
      */
     public function index() {
         return Inertia::render('Events', [
-            "allEvents" => $this->EventRepository->eventList(), // Tout les évenements 
-            "todayEvents" => $this->EventRepository->todayEvents(), // Les évenements prévu pour aujourd'hui
-            "futurEvents" => $this->EventRepository->futurEvents() // Les évenements à venir
+            "allEvents" => $this->eventRepository->eventList(), // Tout les évenements 
+            "todayEvents" => $this->eventRepository->todayEvents(), // Les évenements prévu pour aujourd'hui
+            "futurEvents" => $this->eventRepository->futurEvents() // Les évenements à venir
         ]);
     }
     
@@ -34,7 +34,7 @@ class EventController extends Controller
      * Ajouter la date de création et celle de la fin
      */
     public function addEvent(AddEventRequest $request) { // Ajouter un évenement
-        $this->EventRepository->createEvent($request);
+        $this->eventRepository->createEvent($request);
 
         return redirect()->back()->with('message', 'Événement crée avec succès !');
     }
@@ -45,7 +45,7 @@ class EventController extends Controller
      */
     public function updateEvent(UpdateEventRequest $request) {
         if ($request->has('id')) {
-            $this->EventRepository->updateEvent($request);
+            $this->eventRepository->updateEvent($request);
 
             return redirect()->back()->with('message', 'Mise à jour effectuée avec succès.');
         } 
@@ -60,7 +60,7 @@ class EventController extends Controller
      */
     public function deleteEvent(Request $request) {
         if($request->has('id')) {
-            $this->EventRepository->deleteEvent($request);
+            $this->eventRepository->deleteEvent($request);
 
             return redirect()->back()->with('message', 'Évenement supprimé avec succès.');
         }
@@ -78,7 +78,7 @@ class EventController extends Controller
         $end = $request->end;
 
         return Inertia::render('Events', [
-            "resultOfFilter" => $this->EventRepository->scopeFilter($start, $end)
+            "resultOfFilter" => $this->eventRepository->scopeFilter($start, $end)
         ]);
     }
 }
