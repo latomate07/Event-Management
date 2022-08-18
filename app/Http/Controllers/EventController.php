@@ -14,9 +14,8 @@ class EventController extends Controller
 
     public function __construct(EventRepository $event)
     {
-        $this->EventRepository = $event; // Instancier le model EventModel pour utiliser ses fonctions
+        $this->EventRepository = $event;
     }
-
     /**
      * Function index()
      * Récupère et renvoie les évenements disponible
