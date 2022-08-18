@@ -2,19 +2,19 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\EventModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Repositories\EventRepository;
 
 class EventController extends Controller
 {   
     protected $event;
 
-    public function __construct()
+    public function __construct(EventRepository $event)
     {
-        $this->event = new EventModel(); // Instancier le model EventModel pour utiliser ses fonctions
+        $this->EventRepository = $event; // Instancier le model EventModel pour utiliser ses fonctions
     }
 
     /**
@@ -23,9 +23,9 @@ class EventController extends Controller
      */
     public function index() {
         return Inertia::render('Events', [
-            "allEvents" => $this->event->eventList(), // Tout les évenements 
-            "todayEvents" => $this->event->todayEvents(), // Les évenements prévu pour aujourd'hui
-            "futurEvents" => $this->event->futurEvents() // Les évenements à venir
+            "allEvents" => $this->EventRepository->eventList(), // Tout les évenements 
+            "todayEvents" => $this->EventRepository->todayEvents(), // Les évenements prévu pour aujourd'hui
+            "futurEvents" => $this->EventRepository->futurEvents() // Les évenements à venir
         ]);
     }
     
@@ -35,18 +35,23 @@ class EventController extends Controller
      * Ajouter la date de création et celle de la fin
      */
     public function addEvent(AddEventRequest $request) { // Ajouter un évenement
-        $this->event::create($request->all());
-  
+        $this->EventRepository->createEvent($request);
+
         return redirect()->back()->with('message', 'Événement crée avec succès !');
     }
 
     /****
-     * function updateEvent => Envoie requête pour mettre à jour dans la BDD
+     * function updateEvent => Consiste à mettre à jour un évenement
+     * Condition => recevoir ID de l'évenement
      */
     public function updateEvent(UpdateEventRequest $request) {
         if ($request->has('id')) {
-            $this->event::find($request->id)->update($request->all());
+            $this->EventRepository->updateEvent($request);
+
             return redirect()->back()->with('message', 'Mise à jour effectuée avec succès.');
+        } 
+        else {
+            return redirect()->back()->withErrors('Une erreur a été produite, veuillez réessayé plus tard.');
         }
     }
 
@@ -55,9 +60,14 @@ class EventController extends Controller
      * Condition => recevoir ID de l'évenement
      */
     public function deleteEvent(Request $request) {
-        $request->has('id') ? $this->event::find($request->id)->delete() : redirect()->back()->with('errors', 'Une erreur a été produite.');
+        if($request->has('id')) {
+            $this->EventRepository->deleteEvent($request);
 
-        return redirect()->back()->with('message', 'Évenement supprimé avec succès.');
+            return redirect()->back()->with('message', 'Évenement supprimé avec succès.');
+        }
+        else {
+            return redirect()->back()->withErrors('Une erreur a été produite, veuillez réessayé plus tard.');
+        }
     }
 
     /***
@@ -69,7 +79,7 @@ class EventController extends Controller
         $end = $request->end;
 
         return Inertia::render('Events', [
-            "resultOfFilter" => $this->event->scopeFilter($start, $end)
+            "resultOfFilter" => $this->EventRepository->scopeFilter($start, $end)
         ]);
     }
 }
